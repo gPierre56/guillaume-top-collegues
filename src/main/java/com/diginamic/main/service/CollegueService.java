@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
 
 /**
@@ -38,5 +39,18 @@ public class CollegueService {
 				.collect(Collectors.toList());
 		return resultat;
 	}
+	
+	public Collegue rechercherParMatricule(String matriculeRecherche) throws CollegueNonTrouveException {
+        
+		List<Collegue> resultat = this.data.values().stream().filter(collegue -> collegue.getMatricule().equals(matriculeRecherche))
+				.collect(Collectors.toList());
+		
+		if (resultat.isEmpty()) {
+			throw new CollegueNonTrouveException("Aucun résultat pour ce matricule");
+		} else {
+			return resultat.get(0);
+		}
+		
+    }
 
 }
