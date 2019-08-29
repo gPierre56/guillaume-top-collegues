@@ -7,22 +7,24 @@ package com.diginamic.main.dto;
  * @author Guillaume
  *
  */
-public class CollegueEmailDTO {
+public class CollegueDto {
 
 	private String email;
+	private String urlPhoto;
 
-	public CollegueEmailDTO(String email) {
+	public CollegueDto() {
 		super();
-		this.email = email;
 	}
 
-	public CollegueEmailDTO() {
+	public CollegueDto(String email, String urlPhoto) {
 		super();
+		this.email = email;
+		this.urlPhoto = urlPhoto;
 	}
 
 	@Override
 	public String toString() {
-		return "CollegueEmailDTO [email=" + email + "]";
+		return "CollegueDto [email=" + email + ", urlPhoto=" + urlPhoto + "]";
 	}
 
 	@Override
@@ -30,6 +32,7 @@ public class CollegueEmailDTO {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((urlPhoto == null) ? 0 : urlPhoto.hashCode());
 		return result;
 	}
 
@@ -41,11 +44,16 @@ public class CollegueEmailDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CollegueEmailDTO other = (CollegueEmailDTO) obj;
+		CollegueDto other = (CollegueDto) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
+			return false;
+		if (urlPhoto == null) {
+			if (other.urlPhoto != null)
+				return false;
+		} else if (!urlPhoto.equals(other.urlPhoto))
 			return false;
 		return true;
 	}
@@ -62,6 +70,20 @@ public class CollegueEmailDTO {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the urlPhoto
+	 */
+	public String getUrlPhoto() {
+		return urlPhoto;
+	}
+
+	/**
+	 * @param urlPhoto the urlPhoto to set
+	 */
+	public void setUrlPhoto(String urlPhoto) {
+		this.urlPhoto = urlPhoto;
 	}
 
 }

@@ -11,8 +11,6 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import com.diginamic.main.dto.CollegueEmailDTO;
-import com.diginamic.main.dto.CollegueUrlDto;
 import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
@@ -32,8 +30,7 @@ public class TestModification {
 		service.setData(new HashMap<String, Collegue>());
 		service.getData().put(c.getMatricule(), c);
 
-		assertThat(service.modifierEmail(c.getMatricule(), new CollegueEmailDTO("test@test.fr")).getEmail())
-				.isEqualTo("test@test.fr");
+		assertThat(service.modifierEmail(c.getMatricule(), "test@test").getEmail()).isEqualTo("test@test");
 
 	}
 
@@ -45,7 +42,7 @@ public class TestModification {
 		service.setData(new HashMap<String, Collegue>());
 		service.getData().put(c.getMatricule(), c);
 
-		service.modifierEmail(c.getMatricule(), new CollegueEmailDTO("testtest.fr"));
+		service.modifierEmail(c.getMatricule(), "testtest.fr");
 
 	}
 
@@ -58,7 +55,7 @@ public class TestModification {
 		service.setData(new HashMap<String, Collegue>());
 		service.getData().put(c.getMatricule(), c);
 
-		service.modifierEmail("dgthrttr", new CollegueEmailDTO("test@test.fr"));
+		service.modifierEmail("dgthrttr", "test@test.fr");
 
 	}
 
@@ -70,7 +67,7 @@ public class TestModification {
 		service.setData(new HashMap<String, Collegue>());
 		service.getData().put(c.getMatricule(), c);
 
-		assertThat(service.modifierPhotoUrl(c.getMatricule(), new CollegueUrlDto("http://eifbzeuyg")).getPhotoUrl())
+		assertThat(service.modifierPhotoUrl(c.getMatricule(), "http://eifbzeuyg").getPhotoUrl())
 				.isEqualTo("http://eifbzeuyg");
 
 	}
@@ -84,7 +81,7 @@ public class TestModification {
 		service.setData(new HashMap<String, Collegue>());
 		service.getData().put(c.getMatricule(), c);
 
-		service.modifierPhotoUrl(c.getMatricule(), new CollegueUrlDto("htefetp://eifbzeuyg"));
+		service.modifierPhotoUrl(c.getMatricule(), "htefetp://eifbzeuyg");
 
 	}
 
@@ -97,7 +94,7 @@ public class TestModification {
 		service.setData(new HashMap<String, Collegue>());
 		service.getData().put(c.getMatricule(), c);
 
-		service.modifierPhotoUrl("tghrtg", new CollegueUrlDto("http://eifbzeuyg"));
+		service.modifierPhotoUrl("tghrtg", "http://eifbzeuyg");
 
 	}
 

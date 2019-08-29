@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.diginamic.main.dto.CollegueEmailDTO;
-import com.diginamic.main.dto.CollegueUrlDto;
 import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
@@ -71,22 +69,22 @@ public class CollegueService {
 
 	}
 
-	public Collegue modifierEmail(String matricule, CollegueEmailDTO email)
+	public Collegue modifierEmail(String matricule, String email)
 			throws CollegueNonTrouveException, CollegueInvalideException {
 		Collegue c = rechercherParMatricule(matricule);
-		if (email.getEmail().contains("@") && email.getEmail().length() > 2) {
-			c.setEmail(email.getEmail());
+		if (email.contains("@") && email.length() > 2) {
+			c.setEmail(email);
 			return c;
 		} else {
 			throw new CollegueInvalideException("Modification invalide");
 		}
 	}
 
-	public Collegue modifierPhotoUrl(String matricule, CollegueUrlDto url)
+	public Collegue modifierPhotoUrl(String matricule, String url)
 			throws CollegueNonTrouveException, CollegueInvalideException {
 		Collegue c = rechercherParMatricule(matricule);
-		if (url.getPhotoUrl().startsWith("http")) {
-			c.setPhotoUrl(url.getPhotoUrl());
+		if (url.startsWith("http")) {
+			c.setPhotoUrl(url);
 			return c;
 		} else {
 			throw new CollegueInvalideException("Modification invalide, veuillez vérifier");
