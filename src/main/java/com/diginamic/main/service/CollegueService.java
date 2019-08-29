@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.diginamic.main.dto.CollegueEmailDTO;
+import com.diginamic.main.dto.CollegueUrlDto;
 import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
@@ -67,6 +69,28 @@ public class CollegueService {
 					"L'un des champs renseigné pour la création d'un collègue est invalide, merci de vérifier");
 		}
 
+	}
+
+	public Collegue modifierEmail(String matricule, CollegueEmailDTO email)
+			throws CollegueNonTrouveException, CollegueInvalideException {
+		Collegue c = rechercherParMatricule(matricule);
+		if (email.getEmail().contains("@") && email.getEmail().length() > 2) {
+			c.setEmail(email.getEmail());
+			return c;
+		} else {
+			throw new CollegueInvalideException("Modification invalide");
+		}
+	}
+
+	public Collegue modifierPhotoUrl(String matricule, CollegueUrlDto url)
+			throws CollegueNonTrouveException, CollegueInvalideException {
+		Collegue c = rechercherParMatricule(matricule);
+		if (url.getPhotoUrl().startsWith("http")) {
+			c.setPhotoUrl(url.getPhotoUrl());
+			return c;
+		} else {
+			throw new CollegueInvalideException("Modification invalide, veuillez vérifier");
+		}
 	}
 
 	/**
