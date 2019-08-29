@@ -4,12 +4,14 @@
 package com.diginamic.main.service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
 
@@ -39,18 +41,46 @@ public class CollegueService {
 				.collect(Collectors.toList());
 		return resultat;
 	}
-	
+
 	public Collegue rechercherParMatricule(String matriculeRecherche) throws CollegueNonTrouveException {
-        
-		List<Collegue> resultat = this.data.values().stream().filter(collegue -> collegue.getMatricule().equals(matriculeRecherche))
-				.collect(Collectors.toList());
-		
+
+		List<Collegue> resultat = this.data.values().stream()
+				.filter(collegue -> collegue.getMatricule().equals(matriculeRecherche)).collect(Collectors.toList());
+
 		if (resultat.isEmpty()) {
 			throw new CollegueNonTrouveException("Aucun résultat pour ce matricule");
 		} else {
 			return resultat.get(0);
 		}
-		
-    }
+
+	}
+
+	public Collegue ajouterUnCollegue(Collegue c) throws CollegueInvalideException {
+		if (c.getNom().length() > 1 && c.getPrenom().length() > 1
+				&& (c.getEmail().contains("@") && c.getEmail().length() > 2) && c.getPhotoUrl().startsWith("http")
+				&& (Period.between(c.getDateDeNaissance(), LocalDate.now()).getYears() > 17)) {
+			c.setMatricule(UUID.randomUUID().toString());
+			this.data.put(c.getMatricule(), c);
+			return c;
+		} else {
+			throw new CollegueInvalideException(
+					"L'un des champs renseigné pour la création d'un collègue est invalide, merci de vérifier");
+		}
+
+	}
+
+	/**
+	 * @return the data
+	 */
+	public Map<String, Collegue> getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(Map<String, Collegue> data) {
+		this.data = data;
+	}
 
 }

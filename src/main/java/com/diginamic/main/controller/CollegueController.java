@@ -11,11 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
 import com.diginamic.main.service.CollegueService;
@@ -37,7 +40,7 @@ public class CollegueController {
 				.collect(Collectors.toList());
 
 	}
-	
+
 	@GetMapping(value = "/{matricule}")
 	public ResponseEntity<Collegue> getCollegueByMatricule(@PathVariable String matricule) {
 		try {
@@ -47,6 +50,20 @@ public class CollegueController {
 			HttpHeaders header = new HttpHeaders();
 			header.set("Erreur", "Collègue non trouvé");
 			return new ResponseEntity<Collegue>(null, header, HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PostMapping
+	public ResponseEntity<Collegue> addCollegue(@RequestBody Collegue c) {
+		HttpHeaders header = new HttpHeaders();
+		try {
+			header.set("Succes", "Succès");
+			return new ResponseEntity<Collegue>(service.ajouterUnCollegue(c), header, HttpStatus.ACCEPTED);
+
+		} catch (CollegueInvalideException e) {
+
+			header.set("Erreur", e.getMsg());
+			return new ResponseEntity<Collegue>(null, header, HttpStatus.CONFLICT);
 		}
 	}
 
