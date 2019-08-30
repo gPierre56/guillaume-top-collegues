@@ -3,8 +3,6 @@
  */
 package com.example.demo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.LocalDate;
 
 import org.junit.Test;
@@ -19,24 +17,24 @@ import com.diginamic.main.service.CollegueService;
  */
 public class TestAjout {
 
-	@Test
-	public void testAjout() {
-		CollegueService service = new CollegueService();
-		int indexDepart = service.getData().size();
-		int indexFin = service.getData().size() + 1;
-
-		Collegue c = new Collegue("fzfzeze", "yuuyvyugy", "fekjberkjb@zrfzef.fr", LocalDate.of(1970, 2, 3),
-				"http://www.nioutaik.fr/images/galerie/fail%2002.jpg");
-		try {
-			service.ajouterUnCollegue(c);
-			assertThat(service.getData().size() == indexFin);
-			assertThat(service.ajouterUnCollegue(c).getMatricule() != null);
-
-		} catch (CollegueInvalideException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	public void testAjout() {
+//		CollegueService service = new CollegueService();
+//		int indexDepart = service.getData().size();
+//		int indexFin = service.getData().size() + 1;
+//
+//		Collegue c = new Collegue("fzfzeze", "yuuyvyugy", "fekjberkjb@zrfzef.fr", LocalDate.of(1970, 2, 3),
+//				"http://www.nioutaik.fr/images/galerie/fail%2002.jpg");
+//		try {
+//			service.ajouterUnCollegue(c);
+//			assertThat(service.getData().size() == indexFin);
+//			assertThat(service.ajouterUnCollegue(c).getMatricule() != null);
+//
+//		} catch (CollegueInvalideException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Test(expected = CollegueInvalideException.class)
 	public void testAjoutExceptionEmail() throws CollegueInvalideException {
