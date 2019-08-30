@@ -1,15 +1,42 @@
 package com.diginamic.main.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.UUID;
 
-public class Collegue {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "COLLEGUE")
+public class Collegue implements Serializable {
+
+	private static final long serialVersionUID = -8251209735473335033L;
+	@Id
+	@Column(name = "matricule")
 	private String matricule;
+	@Column(name = "nom")
 	private String nom;
+	@Column(name = "prenom")
 	private String prenom;
+	@Column(name = "email")
 	private String email;
+	@Column(name = "date_de_naissance")
 	private LocalDate dateDeNaissance;
+	@Column(name = "photo_url")
 	private String photoUrl;
+
+	public Collegue(String nom, String prenom, String email, LocalDate dateDeNaissance, String photoUrl) {
+		super();
+		this.matricule = UUID.randomUUID().toString();
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.dateDeNaissance = dateDeNaissance;
+		this.photoUrl = photoUrl;
+	}
 
 	public Collegue(String matricule, String nom, String prenom, String email, LocalDate dateDeNaissance,
 			String photoUrl) {
@@ -22,23 +49,8 @@ public class Collegue {
 		this.photoUrl = photoUrl;
 	}
 
-	public Collegue(String nom, String prenom, String email, LocalDate dateDeNaissance, String photoUrl) {
-		super();
-		this.nom = nom;
-		this.prenom = prenom;
-		this.email = email;
-		this.dateDeNaissance = dateDeNaissance;
-		this.photoUrl = photoUrl;
-	}
-
 	public Collegue() {
 		super();
-	}
-
-	@Override
-	public String toString() {
-		return "Collegue [matricule=" + matricule + ", nom=" + nom + ", prenom=" + prenom + ", email=" + email
-				+ ", dateDeNaissance=" + dateDeNaissance + ", photoUrl=" + photoUrl + "]";
 	}
 
 	@Override
@@ -94,6 +106,12 @@ public class Collegue {
 		} else if (!prenom.equals(other.prenom))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Collegue [matricule=" + matricule + ", nom=" + nom + ", prenom=" + prenom + ", email=" + email
+				+ ", dateDeNaissance=" + dateDeNaissance + ", photoUrl=" + photoUrl + "]";
 	}
 
 	/**

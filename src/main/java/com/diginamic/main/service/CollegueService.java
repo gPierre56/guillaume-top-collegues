@@ -3,64 +3,57 @@
  */
 package com.diginamic.main.service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
+import com.diginamic.main.repository.CollegueRepository;
+import com.diginamic.main.utils.CollegueValidator;
 
 /**
  * @author Guillaume
  *
  */
+
+@Service
 public class CollegueService {
 
-	private Map<String, Collegue> data = new HashMap<>();
+	@Autowired
+	private CollegueValidator validator;
 
-	public CollegueService() {
-		String matricule1 = UUID.randomUUID().toString();
-		String matricule2 = UUID.randomUUID().toString();
-		String matricule3 = UUID.randomUUID().toString();
-		this.data.put(matricule1, new Collegue(matricule1.toString(), "Pierre", "Guillaume", "ergreg@gmail.com",
-				LocalDate.of(1991, 9, 20), "http://www.nioutaik.fr/images/galerie/hackerstr.jpg"));
-		this.data.put(matricule2, new Collegue(matricule2, "Turpin", "Eloi", "test@gmail.com",
-				LocalDate.of(1978, 2, 14), "http://www.nioutaik.fr/images/galerie/falcon-punch.jpg"));
-		this.data.put(matricule3, new Collegue(matricule3, "Peyras", "Cécile", "test@gmail.fr",
-				LocalDate.of(1980, 7, 15), "http://www.nioutaik.fr/images/galerie/fail%2002.jpg"));
-	}
+	@Autowired
+	private CollegueRepository repository;
 
 	public List<Collegue> rechercherParNom(String nom) {
-		List<Collegue> resultat;
-		resultat = this.data.values().stream().filter(collegue -> collegue.getNom().equals(nom))
-				.collect(Collectors.toList());
-		return resultat;
+
+		return repository.findByNom(nom);
+
 	}
 
 	public Collegue rechercherParMatricule(String matriculeRecherche) throws CollegueNonTrouveException {
 
-		List<Collegue> resultat = this.data.values().stream()
-				.filter(collegue -> collegue.getMatricule().equals(matriculeRecherche)).collect(Collectors.toList());
+		Optional<Collegue> resultat = repository.findById(matriculeRecherche);
 
-		if (resultat.isEmpty()) {
+		if (!resultat.isPresent()) {
 			throw new CollegueNonTrouveException("Aucun résultat pour ce matricule");
 		} else {
-			return resultat.get(0);
+			return resultat.get();
 		}
 
 	}
 
 	public Collegue ajouterUnCollegue(Collegue c) throws CollegueInvalideException {
-		if (c.getNom().length() > 1 && c.getPrenom().length() > 1
-				&& (c.getEmail().contains("@") && c.getEmail().length() > 2) && c.getPhotoUrl().startsWith("http")
-				&& (Period.between(c.getDateDeNaissance(), LocalDate.now()).getYears() > 17)) {
+		if (validator.validerTout(c)) {
 			c.setMatricule(UUID.randomUUID().toString());
-			this.data.put(c.getMatricule(), c);
+			repository.save(c);
 			return c;
 		} else {
 			throw new CollegueInvalideException(
@@ -69,10 +62,11 @@ public class CollegueService {
 
 	}
 
+	@Transactional
 	public Collegue modifierEmail(String matricule, String email)
 			throws CollegueNonTrouveException, CollegueInvalideException {
 		Collegue c = rechercherParMatricule(matricule);
-		if (email.contains("@") && email.length() > 2) {
+		if (validator.validerEmail(email)) {
 			c.setEmail(email);
 			return c;
 		} else {
@@ -80,29 +74,16 @@ public class CollegueService {
 		}
 	}
 
+	@Transactional
 	public Collegue modifierPhotoUrl(String matricule, String url)
 			throws CollegueNonTrouveException, CollegueInvalideException {
 		Collegue c = rechercherParMatricule(matricule);
-		if (url.startsWith("http")) {
+		if (validator.validerUrlPhoto(url)) {
 			c.setPhotoUrl(url);
 			return c;
 		} else {
 			throw new CollegueInvalideException("Modification invalide, veuillez vérifier");
 		}
-	}
-
-	/**
-	 * @return the data
-	 */
-	public Map<String, Collegue> getData() {
-		return data;
-	}
-
-	/**
-	 * @param data the data to set
-	 */
-	public void setData(Map<String, Collegue> data) {
-		this.data = data;
 	}
 
 }

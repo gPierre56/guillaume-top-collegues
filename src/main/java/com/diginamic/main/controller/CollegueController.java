@@ -6,6 +6,7 @@ package com.diginamic.main.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +29,26 @@ import com.diginamic.main.model.Collegue;
 import com.diginamic.main.service.CollegueService;
 
 /**
- * @author Guillaume
- *
+ * @author Guillaume Classe recevant les requêtes Http concernant les entités
+ *         Collegue
  */
 @RestController
 @RequestMapping(value = "/collegue")
 public class CollegueController {
 
-	CollegueService service = new CollegueService();
+	/**
+	 * Injection de la classe de service nécéssaire aux opérations de modification
+	 * de la classe collègue
+	 */
+	@Autowired
+	CollegueService service;
 
+	/**
+	 * @param nomCollegue = Nom utilisé pour effectuer une recherche de collègue(s)
+	 *                    via leur nom de famille
+	 * @return un collègue ou une liste dont les noms de famille sont équivalent à
+	 *         celui recherché Fonctionne en GET
+	 */
 	@GetMapping
 	@ResponseBody
 	public List<String> getCollegueByNom(@RequestParam String nomCollegue) {
@@ -45,6 +57,13 @@ public class CollegueController {
 
 	}
 
+	/**
+	 * @param matricule = Matricule utilisé pour effectuer une recherche de collègue
+	 *                  via leur matricule unique
+	 * @return Retourne le collègue dont le matricule correspond à celui recherché.
+	 *         Si aucun matricule ne correspond, renvoie une exception. Fonctionne
+	 *         en GET
+	 */
 	@GetMapping(value = "/{matricule}")
 	public ResponseEntity<Collegue> getCollegueByMatricule(@PathVariable String matricule) {
 		try {
@@ -57,6 +76,13 @@ public class CollegueController {
 		}
 	}
 
+	/**
+	 * @param c = Correspond au collègue que l'on souhaite ajouter en base de
+	 *          données récupérés puis parsé depuis un format JSON vaec une classe
+	 *          model de récupération (DTO)
+	 * @return Renvoie le collègue ajouté en base ou, si une erreur s'est produite,
+	 *         renvoie une exception. Fonctionne en POST
+	 */
 	@PostMapping
 	public ResponseEntity<Collegue> addCollegue(@RequestBody Collegue c) {
 		HttpHeaders header = new HttpHeaders();
@@ -71,45 +97,12 @@ public class CollegueController {
 		}
 	}
 
-//	@PatchMapping(value = "/{matricule}")
-//	public ResponseEntity<Collegue> modifierEmailCollegue(@PathVariable String matricule,
-//			@RequestBody CollegueEmailDTO email) {
-//		HttpHeaders header = new HttpHeaders();
-//
-//		try {
-//			header.set("Success", "Success");
-//
-//			return new ResponseEntity<>(service.modifierEmail(matricule, email), header, HttpStatus.ACCEPTED);
-//		} catch (CollegueNonTrouveException e) {
-//			header.set("Erreur", e.getMsg());
-//			return ResponseEntity.notFound().header("Erreur", e.getMsg()).build();
-////			return new ResponseEntity<Collegue>(null, header, HttpStatus.NOT_FOUND);
-//		} catch (CollegueInvalideException e) {
-//			header.set("Erreur", e.getMsg());
-//			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
-//		}
-//	}
-//
-//	@PutMapping(value = "/{matricule}")
-//	public ResponseEntity<Collegue> modifierUrlCollegue(@PathVariable String matricule,
-//			@RequestBody CollegueUrlDto url) {
-//		HttpHeaders header = new HttpHeaders();
-//		try {
-//			header.set("Success", "Success");
-//			return new ResponseEntity<>(service.modifierPhotoUrl(matricule, url), header, HttpStatus.OK);
-//		} catch (CollegueNonTrouveException e) {
-//			return ResponseEntity.notFound().header("Erreur", e.getMsg()).build();
-//		} catch (CollegueInvalideException e) {
-//			return ResponseEntity.badRequest().header("Erreur", e.getMsg()).build();
-//		}
-//	}
-
-	@ExceptionHandler(value = { CollegueInvalideException.class, CollegueNonTrouveException.class })
-	protected ResponseEntity<Object> handleConflict(CollegueInvalideException ex, WebRequest request) {
-		String bodyOfResponse = ex.getMsg();
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(bodyOfResponse);
-	}
-
+	/**
+	 * @param matricule = Le matricule du collegue dont on souhaite modifier l'email
+	 *                  ou l'url photo
+	 * @param dto       =
+	 * @return
+	 */
 	@PatchMapping(value = "/{matricule}")
 	public ResponseEntity<Collegue> modifierCollegue(@PathVariable String matricule, @RequestBody CollegueDto dto) {
 
@@ -130,6 +123,18 @@ public class CollegueController {
 			return ResponseEntity.badRequest().header("Erreur", e.getMsg()).build();
 		}
 
+	}
+
+	@ExceptionHandler(value = { CollegueInvalideException.class })
+	protected ResponseEntity<Object> handleConflict(CollegueInvalideException ex, WebRequest request) {
+		String bodyOfResponse = ex.getMsg();
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(bodyOfResponse);
+	}
+
+	@ExceptionHandler(value = { CollegueNonTrouveException.class })
+	protected ResponseEntity<Object> handleConflict(CollegueNonTrouveException ex, WebRequest request) {
+		String bodyOfResponse = ex.getMsg();
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(bodyOfResponse);
 	}
 
 }
