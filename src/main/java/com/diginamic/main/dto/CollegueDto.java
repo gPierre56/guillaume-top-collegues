@@ -5,6 +5,7 @@ package com.diginamic.main.dto;
 
 /**
  * @author Guillaume
+ * 
  *
  */
 public class CollegueDto {

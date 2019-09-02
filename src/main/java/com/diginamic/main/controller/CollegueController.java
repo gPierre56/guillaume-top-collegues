@@ -100,8 +100,10 @@ public class CollegueController {
 	/**
 	 * @param matricule = Le matricule du collegue dont on souhaite modifier l'email
 	 *                  ou l'url photo
-	 * @param dto       =
-	 * @return
+	 * @param dto       = Classe de récupération des informatons du JSON renvoyé
+	 *                  pour formater les données en attribut d'un collègue
+	 * @return Renvoie une réponse HTTP avec le collègue modifié dans le corps et un
+	 *         code de succès ou d'échec
 	 */
 	@PatchMapping(value = "/{matricule}")
 	public ResponseEntity<Collegue> modifierCollegue(@PathVariable String matricule, @RequestBody CollegueDto dto) {
