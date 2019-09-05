@@ -39,8 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests().antMatchers("/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/auth").permitAll().antMatchers(HttpMethod.GET)
-				.hasAnyRole("USER", "ADMIN").antMatchers(HttpMethod.POST).hasRole("ADMIN").anyRequest().authenticated()
-				.and().headers().frameOptions().disable().and()
+				.hasAnyRole("ROLE_USER", "ROLE_ADMIN").antMatchers(HttpMethod.POST).hasRole("ADMIN").anyRequest()
+				.authenticated().and().headers().frameOptions().disable().and()
 				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class).logout()
 				.logoutSuccessHandler((req, resp, auth) -> resp.setStatus(HttpStatus.OK.value()))
 				.deleteCookies(TOKEN_COOKIE);
