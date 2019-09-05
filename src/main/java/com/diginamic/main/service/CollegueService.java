@@ -6,12 +6,16 @@ package com.diginamic.main.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.diginamic.main.dto.CollegueIdentifieDto;
 import com.diginamic.main.exception.CollegueInvalideException;
 import com.diginamic.main.exception.CollegueNonTrouveException;
 import com.diginamic.main.model.Collegue;
@@ -83,6 +87,17 @@ public class CollegueService {
 			return c;
 		} else {
 			throw new CollegueInvalideException("Modification invalide, veuillez vérifier");
+		}
+	}
+
+	public CollegueIdentifieDto recupererCollegueIdentifie() {
+		Optional<Collegue> collegue = repository
+				.findByInfosConnexionUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (collegue.isPresent()) {
+			return Stream.of(collegue.get()).map(c -> new CollegueIdentifieDto(c.getMatricule(), c.getNom(),
+					c.getPrenom(), c.getInfosConnexion().getRoles())).collect(Collectors.toList()).get(0);
+		} else {
+			return null;
 		}
 	}
 
