@@ -81,4 +81,6 @@ public class AuthentificationController {
 		return new ResponseEntity<>(service.recupererCollegueIdentifie(), HttpStatus.OK);
 	}
 
+	
+
 }
