@@ -15,8 +15,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.diginamic.main.dto.CollegueIdentifieDto;
@@ -56,7 +56,7 @@ public class AuthentificationController {
 	}
 
 	@PostMapping(value = "/auth")
-	public ResponseEntity<?> authentificate(@ModelAttribute("infos") InfosAuthentification infos) {
+	public ResponseEntity<?> authentificate(@RequestBody InfosAuthentification infos) {
 		return this.repository.findByInfosConnexionUsername(infos.getNomUtilisateur())
 				.filter(u -> passwordEncoder.matches(infos.getMotDePasse(), u.getInfosConnexion().getPassword()))
 				.map(u -> {
