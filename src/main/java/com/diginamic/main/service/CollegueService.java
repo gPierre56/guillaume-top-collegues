@@ -90,6 +90,24 @@ public class CollegueService {
 		}
 	}
 
+	@Transactional
+	public Collegue modifierPhotoEtEmail(String matricule, String url, String email) throws CollegueNonTrouveException, CollegueInvalideException {
+		Collegue c = rechercherParMatricule(matricule);
+		if (validator.validerEmail(email)) {
+			c.setEmail(email);
+		} else {
+			throw new CollegueInvalideException("Modification invalide, veuillez vérifier");
+		}
+		if (validator.validerUrlPhoto(url)) {
+			c.setPhotoUrl(url);
+			return c;
+		} else {
+			throw new CollegueInvalideException("Modification invalide, veuillez vérifier");
+		}
+
+
+	}
+
 	public CollegueIdentifieDto recupererCollegueIdentifie() {
 		Optional<Collegue> collegue = repository
 				.findByInfosConnexionUsername(SecurityContextHolder.getContext().getAuthentication().getName());
