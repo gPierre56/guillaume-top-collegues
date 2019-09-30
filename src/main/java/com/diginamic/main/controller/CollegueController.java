@@ -6,6 +6,7 @@ package com.diginamic.main.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.diginamic.main.dto.MatriculePhotoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,8 +50,7 @@ public class CollegueController {
      * @return un collègue ou une liste dont les noms de famille sont équivalent à
      *         celui recherché Fonctionne en GET
      */
-    @GetMapping
-    @ResponseBody
+    @GetMapping(params = "nomCollegue")
     public List<String> getCollegueByNom(@RequestParam String nomCollegue) {
         return service.rechercherParNom(nomCollegue).stream().map(collegue -> collegue.getMatricule())
                 .collect(Collectors.toList());
@@ -129,6 +129,22 @@ public class CollegueController {
         }
 
     }
+
+    @GetMapping(params = "email")
+    public ResponseEntity rechercheEmail(@RequestParam String email) {
+        if (service.rechercherParEmail(email) == null) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
+    @GetMapping("/photos")
+    public ResponseEntity<List<MatriculePhotoDto>> recupererLesPhotos() {
+        return new ResponseEntity<>(service.recupererToutesLesPhotos(), HttpStatus.OK);
+    }
+
+
 
     @ExceptionHandler(value = {CollegueInvalideException.class})
     protected ResponseEntity<Object> handleConflict(CollegueInvalideException ex, WebRequest request) {
