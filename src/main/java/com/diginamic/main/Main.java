@@ -30,11 +30,11 @@ public class Main {
 	@EventListener(ContextRefreshedEvent.class)
 	public void init() {
 		repository.save(new Collegue("AZERTY", "Doe", "John", "john.doe@gmail.com", LocalDate.of(1989, 1, 31),
-				"http://osef", new InfosConnexion("john", passwordEncoder.encode("1234"),
+				"http://www.nioutaik.fr/images/dossier8/panneau2a.jpg", new InfosConnexion("john", passwordEncoder.encode("1234"),
 						Arrays.asList(Role.ROLE_ADMIN, Role.ROLE_USER))));
 
 		repository.save(
-				new Collegue("QWERTY", "Duff", "John", "john.duff@gmail.com", LocalDate.of(1970, 1, 31), "http://osef",
+				new Collegue("QWERTY", "Duff", "John", "john.duff@gmail.com", LocalDate.of(1970, 1, 31), "http://www.nioutaik.fr/images/galerie/jungle_mario.PV__.jpg",
 						new InfosConnexion("jojo", passwordEncoder.encode("1234"), Arrays.asList(Role.ROLE_USER))));
 	}
 
